@@ -35,10 +35,11 @@ pipeline {
 
     post {
         success {
-            sh 'open http://localhost:8081'
+            echo 'Deployed container on port 8081'
+            sh 'open http://localhost:8081' // macOS only
         }
         failure {
-            echo "Build or deployment failed."
+            echo 'Build or deployment failed.'
         }
     }
 }
