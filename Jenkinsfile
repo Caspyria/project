@@ -11,7 +11,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    dockerImage = docker.build("my-nginx-image:${env.BUILD_NUMBER}")
+                    dockerImage = docker.build("my-nginx-image:latest")
                 }
             }
         }
