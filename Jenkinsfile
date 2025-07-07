@@ -24,14 +24,14 @@ pipeline {
 
         stage('Load Image into Minikube') {
             steps {
-                sh "minikube image load ${IMAGE_TAG}"
+                sh "${MINIKUBE_PATH} image load ${IMAGE_TAG}"
             }
         }
 
         stage('Deploy to Kubernetes') {
             steps {
-                sh 'kubectl apply -f k8s/nginx-deployment.yaml'
-                sh 'kubectl apply -f k8s/nginx-service.yaml'
+                sh "${KUBECTL_PATH} apply -f k8s/nginx-deployment.yaml"
+        	sh "${KUBECTL_PATH} apply -f k8s/nginx-service.yaml"
             }
         }
     }
