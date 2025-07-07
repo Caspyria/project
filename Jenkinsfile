@@ -11,8 +11,10 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    dockerImage = docker.build("my-nginx-image:alpine")
-                }
+                    // Find the correct path to docker on your agent
+                    sh 'export PATH="/usr/local/bin:$PATH"; docker build -t "SJD_IMAGE" .'
+                	}
+               	 }
             }
         }
 
