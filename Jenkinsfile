@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        // Adjust path to where your Docker is (Apple Silicon vs Intel)
-        PATH = "/opt/homebrew/bin:/usr/local/bin:/bin:/usr/bin:${env.PATH}"
+        // Hardcode Docker path known to work on your Mac
+        DOCKER_PATH = "/usr/local/bin/docker"
     }
 
     stages {
@@ -15,15 +15,15 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t my-nginx-image:${BUILD_NUMBER} ."
+                sh "${DOCKER_PATH} build -t my-nginx-image:${BUILD_NUMBER} ."
             }
         }
 
         stage('Stop & Remove Old Container') {
             steps {
                 sh '''
-                    if [ "$(docker ps -q -f name=my-nginx-container)" ]; then
-                        docker rm -f my-nginx-container
+                    if [ $("${DOCKER_PATH}" ps -q -f name=my-nginx-container) ]; then
+                        "${DOCKER_PATH}" rm -f my-nginx-container
                     fi
                 '''
             }
@@ -31,7 +31,7 @@ pipeline {
 
         stage('Run Docker Container') {
             steps {
-                sh "docker run -d --name my-nginx-container -p 8081:80 my-nginx-image:${BUILD_NUMBER}"
+                sh "${DOCKER_PATH} run -d --name my-nginx-container -p 8081:80 my-nginx-image:${BUILD_NUMBER}"
             }
         }
     }
@@ -39,12 +39,5 @@ pipeline {
     post {
         success {
             echo 'Deployed container on port 8081'
-            // macOS only; skip this if you're using Linux
-            sh 'which open && open http://localhost:8081 || echo "Open skipped"'
-        }
-        failure {
-            echo 'Build or deployment failed.'
-        }
-    }
-}
+            // macOS on
 
