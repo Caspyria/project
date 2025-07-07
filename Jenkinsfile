@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        // Hardcode Docker path known to work on your Mac
         DOCKER_PATH = "/usr/local/bin/docker"
+        IMAGE_TAG = "my-nginx-image:${BUILD_NUMBER}"
     }
 
     stages {
@@ -15,30 +15,27 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh "${DOCKER_PATH} build -t my-nginx-image:${BUILD_NUMBER} ."
+                sh "${DOCKER_PATH} build -t ${IMAGE_TAG} ."
             }
         }
 
-        stage('Stop & Remove Old Container') {
+        stage('Load Image into Minikube') {
             steps {
-                sh '''
-                    if [ "$(${DOCKER_PATH} ps -q -f name=my-nginx-container)" ]; then
-                        ${DOCKER_PATH} rm -f my-nginx-container
-                    fi
-                '''
+                sh "minikube image load ${IMAGE_TAG}"
             }
         }
 
-        stage('Run Docker Container') {
+        stage('Deploy to Kubernetes') {
             steps {
-                sh "${DOCKER_PATH} run -d --name my-nginx-container -p 8081:80 my-nginx-image:${BUILD_NUMBER}"
+                sh 'kubectl apply -f k8s/nginx-deployment.yaml'
+                sh 'kubectl apply -f k8s/nginx-service.yaml'
             }
         }
     }
 
     post {
         success {
-            echo 'Deployed container on port 8081'
+            echo 'Deployed to Kubernetes via Minikube'
         }
         failure {
             echo 'Deployment failed'
