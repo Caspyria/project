@@ -11,7 +11,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    dockerImage = docker.build("my-nginx-image:latest")
+                    dockerImage = docker.build("my-nginx-image:alpine")
                 }
             }
         }
