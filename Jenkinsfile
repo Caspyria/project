@@ -4,9 +4,9 @@ pipeline {
     environment {
         DOCKER_PATH = "/usr/local/bin/docker"
         IMAGE_TAG = "my-nginx-image:${BUILD_NUMBER}"
-	OCKER_EXECUTABLE_PATH = '/usr/local/bin/docker'   
-        KUBECTL_EXECUTABLE_PATH = '/usr/local/bin/kubectl' 
-        MINIKUBE_EXECUTABLE_PATH = '/usr/local/bin/minikube' 
+	DOCKER_EXECUTABLE_PATH = '/Users/caspy/.rd/bin/docker'   
+        KUBECTL_EXECUTABLE_PATH = '/Users/caspy/.rd/bin/kubectl' 
+        MINIKUBE_EXECUTABLE_PATH = '/opt/homebrew/bin/minikube' 
     }
 
     stages {
