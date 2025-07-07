@@ -22,8 +22,8 @@ pipeline {
         stage('Stop & Remove Old Container') {
             steps {
                 sh '''
-                    if [ $("${DOCKER_PATH}" ps -q -f name=my-nginx-container) ]; then
-                        "${DOCKER_PATH}" rm -f my-nginx-container
+                    if [ "$(${DOCKER_PATH} ps -q -f name=my-nginx-container)" ]; then
+                        ${DOCKER_PATH} rm -f my-nginx-container
                     fi
                 '''
             }
@@ -39,5 +39,10 @@ pipeline {
     post {
         success {
             echo 'Deployed container on port 8081'
-            // macOS on
+        }
+        failure {
+            echo 'Deployment failed'
+        }
+    }
+}
 
