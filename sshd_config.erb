@@ -1,0 +1,12 @@
+Port 22
+Protocol 2
+PermitRootLogin no
+PasswordAuthentication no
+ChallengeResponseAuthentication no
+UsePAM yes
+AllowAgentForwarding no
+AllowTcpForwarding yes
+PrintMotd no
+Banner /etc/issue.net
+Subsystem sftp /usr/lib/openssh/sftp-server
+
